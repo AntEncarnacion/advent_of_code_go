@@ -46,7 +46,7 @@ func solver(input string) int {
 				number_buffer = append(number_buffer, char)
 			}
 
-			if (!unicode.IsDigit(char) && len(number_buffer) > 0) || x == len(line)-1 {
+			if (!unicode.IsDigit(char) && len(number_buffer) > 0) || (x == len(line)-1 && len(number_buffer) > 0) {
 				value, _ := strconv.Atoi(string(number_buffer))
 				number_entities = append(number_entities, number_entity{value, start_x, x - 1, y})
 				start_x = -1

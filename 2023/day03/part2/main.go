@@ -36,7 +36,7 @@ func solver(input string) int {
 
 		for x, char := range line {
 			stringified_char := string(char)
-			if !unicode.IsSpace(char) && !unicode.IsDigit(char) && !unicode.IsLetter(char) && stringified_char != "." {
+			if stringified_char == "*" {
 				symbol_coordinates = append(symbol_coordinates, coordinates{x, y, string(char)})
 			} else if unicode.IsDigit(char) {
 				if !number_flag {
@@ -57,19 +57,17 @@ func solver(input string) int {
 	}
 
 	for _, symbol_coordinate := range symbol_coordinates {
-		if symbol_coordinate.value == "*" {
-			number_entities_in_range := append(number_entities[symbol_coordinate.y], append(number_entities[symbol_coordinate.y-1], number_entities[symbol_coordinate.y+1]...)...)
-			var gear_ratio_buffer []int
-			for _, number_entity := range number_entities_in_range {
-				if (symbol_coordinate.y == number_entity.y || symbol_coordinate.y == number_entity.y-1 || symbol_coordinate.y == number_entity.y+1) && (symbol_coordinate.x <= number_entity.end_x+1 && symbol_coordinate.x >= number_entity.start_x-1) {
-					gear_ratio_buffer = append(gear_ratio_buffer, number_entity.value)
-				}
+		number_entities_in_range := append(number_entities[symbol_coordinate.y], append(number_entities[symbol_coordinate.y-1], number_entities[symbol_coordinate.y+1]...)...)
+		var gear_ratio_buffer []int
+		for _, number_entity := range number_entities_in_range {
+			if (symbol_coordinate.y == number_entity.y || symbol_coordinate.y == number_entity.y-1 || symbol_coordinate.y == number_entity.y+1) && (symbol_coordinate.x <= number_entity.end_x+1 && symbol_coordinate.x >= number_entity.start_x-1) {
+				gear_ratio_buffer = append(gear_ratio_buffer, number_entity.value)
 			}
-			if len(gear_ratio_buffer) == 2 {
-				result = result + (gear_ratio_buffer[0] * gear_ratio_buffer[1])
-			}
-			gear_ratio_buffer = nil
 		}
+		if len(gear_ratio_buffer) == 2 {
+			result = result + (gear_ratio_buffer[0] * gear_ratio_buffer[1])
+		}
+		gear_ratio_buffer = nil
 	}
 
 	return result
